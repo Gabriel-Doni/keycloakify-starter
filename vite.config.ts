@@ -7,6 +7,8 @@ export default defineConfig({
     plugins: [
         react(),
         keycloakify({
+            themeName: "custom-eve",
+            extraThemeProperties: ["public"],
             accountThemeImplementation: "none"
         })
     ]
