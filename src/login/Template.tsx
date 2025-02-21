@@ -17,7 +17,7 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
     const hasError = messagesPerField.existsError("username", "password");
 
     return (
-        <Grid container sx={{ height: "100vh" }}>
+        <Grid margin={0} padding={0} container sx={{ height: "100vh" }}>
             <Grid
             xs={12} md={8} sx={{ backgroundImage: `url(${import.meta.env.BASE_URL}img/bg-eve.png)`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
             <Grid xs={12} md={4} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
