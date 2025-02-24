@@ -1,7 +1,7 @@
 import type { JSX } from "keycloakify/tools/JSX";
 import { useEffect, Fragment, useState } from "react";
 import { assert } from "keycloakify/tools/assert";
-import { useIsPasswordRevealed } from "keycloakify/tools/useIsPasswordRevealed";
+// import { useIsPasswordRevealed } from "keycloakify/tools/useIsPasswordRevealed";
 import type { KcClsx } from "keycloakify/login/lib/kcClsx";
 import {
     useUserProfileForm,
@@ -13,11 +13,11 @@ import type { UserProfileFormFieldsProps } from "keycloakify/login/UserProfileFo
 import type { Attribute } from "keycloakify/login/KcContext";
 import type { KcContext } from "./KcContext";
 import type { I18n } from "./i18n";
-import { Alert, Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, IconButton, InputAdornment, MenuItem, Radio, RadioGroup, Select, Snackbar, TextField } from "@mui/material";
+import { Alert, Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, MenuItem, Radio, RadioGroup, Select, Snackbar, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+// import VisibilityIcon from "@mui/icons-material/Visibility";
+// import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 export default function UserProfileFormFields(props: UserProfileFormFieldsProps<KcContext, I18n>) {
     const { kcContext, i18n, kcClsx, onIsFormSubmittableValueChange, doMakeUserConfirmPassword, BeforeField, AfterField } = props;
@@ -61,11 +61,13 @@ export default function UserProfileFormFields(props: UserProfileFormFieldsProps<
                                 display: attribute.name === "password-confirm" && !doMakeUserConfirmPassword ? "none" : undefined
                             }}
                         >
+
+                            {/* Comentei pra retirar a label em cima dos campos pra deixar padronizado */}
                             <div className={kcClsx("kcLabelWrapperClass")}>
-                                <label htmlFor={attribute.name} className={kcClsx("kcLabelClass")}>
+                                {/* <label htmlFor={attribute.name} className={kcClsx("kcLabelClass")}>
                                     {advancedMsg(attribute.displayName ?? "")}
                                 </label>
-                                {attribute.required && <> *</>}
+                                {attribute.required && <> *</>} */}
                             </div>
                             <div className={kcClsx("kcInputWrapperClass")}>
                                 {attribute.annotations.inputHelperTextBefore !== undefined && (
@@ -181,7 +183,7 @@ function FieldErrors(props: { attribute: Attribute; displayableErrors: FormField
 
     const displayableErrors = props.displayableErrors.filter(error => error.fieldIndex === fieldIndex);
 
-    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [,setOpenSnackbar] = useState(false);
 
 
     if (displayableErrors.length === 0) {
@@ -275,7 +277,7 @@ function PasswordWrapper(props: {
     passwordInputId: string;
     children: JSX.Element
 }) {
-    const { kcClsx, i18n, passwordInputId, children } = props;
+    const { kcClsx, children } = props;
 
     // const { msgStr } = i18n;
 
@@ -305,6 +307,10 @@ function InputTag(props: InputFieldByTypeProps & { fieldIndex: number | undefine
     return (
         <>
             <TextField
+                margin="normal"
+                color="success"
+                required={attribute.required}
+                label={advancedMsgStr(attribute.displayName ?? "")}
                 type={(() => {
                     const { inputType } = attribute.annotations;
 

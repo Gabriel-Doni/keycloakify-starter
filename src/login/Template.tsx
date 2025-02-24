@@ -19,7 +19,7 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
     return (
         <Grid margin={0} padding={0} container sx={{ height: "100vh" }}>
             <Grid
-            xs={12} md={8} sx={{ backgroundImage: `url(${import.meta.env.BASE_URL}img/bg-eve.png)`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                xs={12} md={8} sx={{ backgroundImage: `url(${import.meta.env.BASE_URL}img/bg-eve.png)`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
             <Grid xs={12} md={4} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                 <Box component="form" sx={{ width: "80%", maxWidth: 400 }}>
                     {hasError && message && (
@@ -35,26 +35,35 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
                     )}
                     {children}
                     {infoNode}
+                    {enabledLanguages.length > 1 && (
+                        <FormControl
+                            fullWidth
+                            sx={{
+                                display: "flex",
+                                alignItems: "flex-end",
+                                marginTop: "16px",
+                                width: "auto"
+                            }}
+                        >
+                            <Select
+                                color="success"
+                                labelId="language-select-label"
+                                id="language-select"
+                                value={currentLanguage.languageTag}
+                                onChange={(event) => window.location.href = enabledLanguages.find(lang => lang.languageTag === event.target.value)?.href || ""}
+                            >
+                                {enabledLanguages.map((lang) => (
+                                    <MenuItem key={lang.languageTag} value={lang.languageTag}>
+                                        {lang.label}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    )}
                 </Box>
             </Grid>
 
-            {enabledLanguages.length > 1 && (
-                <FormControl fullWidth sx={{ position: "absolute", bottom: 16, right: 16, width: "auto" }}>
-                    <Select
-                        color="success"
-                        labelId="language-select-label"
-                        id="language-select"
-                        value={currentLanguage.languageTag}
-                        onChange={(event) => window.location.href = enabledLanguages.find(lang => lang.languageTag === event.target.value)?.href || ""}
-                    >
-                        {enabledLanguages.map((lang) => (
-                            <MenuItem key={lang.languageTag} value={lang.languageTag}>
-                                {lang.label}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-            )}
+
         </Grid>
     );
 }

@@ -8,6 +8,8 @@ import type { UserProfileFormFieldsProps } from "keycloakify/login/UserProfileFo
 import type { PageProps } from "keycloakify/login/pages/PageProps";
 import type { KcContext } from "../KcContext";
 import type { I18n } from "../i18n";
+import { Button } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 type RegisterProps = PageProps<Extract<KcContext, { pageId: "register.ftl" }>, I18n> & {
     UserProfileFormFields: LazyOrNot<(props: UserProfileFormFieldsProps) => JSX.Element>;
@@ -65,13 +67,7 @@ export default function Register(props: RegisterProps) {
                     </div>
                 )}
                 <div className={kcClsx("kcFormGroupClass")}>
-                    <div id="kc-form-options" className={kcClsx("kcFormOptionsClass")}>
-                        <div className={kcClsx("kcFormOptionsWrapperClass")}>
-                            <span>
-                                <a href={url.loginUrl}>{msg("backToLogin")}</a>
-                            </span>
-                        </div>
-                    </div>
+
 
                     {recaptchaRequired && !recaptchaVisible && recaptchaAction !== undefined ? (
                         <div id="kc-form-buttons" className={kcClsx("kcFormButtonsClass")}>
@@ -92,14 +88,39 @@ export default function Register(props: RegisterProps) {
                         </div>
                     ) : (
                         <div id="kc-form-buttons" className={kcClsx("kcFormButtonsClass")}>
-                            <input
-                                disabled={!isFormSubmittable || (termsAcceptanceRequired && !areTermsAccepted)}
-                                className={kcClsx("kcButtonClass", "kcButtonPrimaryClass", "kcButtonBlockClass", "kcButtonLargeClass")}
+                            <Button
+                                sx={{
+                                    marginTop: "16px",
+                                    background: "#8DC63F",
+                                    width: "100%",
+                                    marginBottom: "16px"
+                                }}
+                                variant="contained"
+                                color="primary"
+                                fullWidth
+                                size="large"
                                 type="submit"
-                                value={msgStr("doRegister")}
-                            />
+                                disabled={!isFormSubmittable || (termsAcceptanceRequired && !areTermsAccepted)}
+                            >
+                                {msgStr("doRegister")}
+                            </Button>
                         </div>
                     )}
+
+                    <div id="kc-form-options" className={kcClsx("kcFormOptionsClass")} style={{ display: "flex", justifyContent: "flex-start", alignItems: "center" }}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            startIcon={<ArrowBackIcon />}
+                            href={url.loginUrl}
+                            sx={{
+                                width: "100%",
+                                background: "#8DC63F",
+                            }}
+                        >
+                            {msg("login")}
+                        </Button>
+                    </div>
                 </div>
             </form>
         </Template>
