@@ -1,7 +1,6 @@
 import type { JSX } from "keycloakify/tools/JSX";
 import { useEffect, Fragment, useState } from "react";
 import { assert } from "keycloakify/tools/assert";
-// import { useIsPasswordRevealed } from "keycloakify/tools/useIsPasswordRevealed";
 import type { KcClsx } from "keycloakify/login/lib/kcClsx";
 import {
     useUserProfileForm,
@@ -13,11 +12,11 @@ import type { UserProfileFormFieldsProps } from "keycloakify/login/UserProfileFo
 import type { Attribute } from "keycloakify/login/KcContext";
 import type { KcContext } from "./KcContext";
 import type { I18n } from "./i18n";
-import { Alert, Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, MenuItem, Radio, RadioGroup, Select, Snackbar, TextField } from "@mui/material";
+import { Alert, Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, MenuItem, Radio, RadioGroup, Select, Snackbar, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-// import VisibilityIcon from "@mui/icons-material/Visibility";
-// import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import React from "react";
+import { MuiTelInput, MuiTelInputCountry } from 'mui-tel-input'
 
 export default function UserProfileFormFields(props: UserProfileFormFieldsProps<KcContext, I18n>) {
     const { kcContext, i18n, kcClsx, onIsFormSubmittableValueChange, doMakeUserConfirmPassword, BeforeField, AfterField } = props;
@@ -183,7 +182,7 @@ function FieldErrors(props: { attribute: Attribute; displayableErrors: FormField
 
     const displayableErrors = props.displayableErrors.filter(error => error.fieldIndex === fieldIndex);
 
-    const [,setOpenSnackbar] = useState(false);
+    const [, setOpenSnackbar] = useState(false);
 
 
     if (displayableErrors.length === 0) {
@@ -266,35 +265,95 @@ function InputFieldByType(props: InputFieldByTypeProps) {
                 );
             }
 
+            const inputPhone = <InputPhoneTag {...props} fieldIndex={undefined} />
+
+            if (attribute.name == "phoneNumber") {
+                return (
+                    <>
+                        {inputPhone}
+                    </>
+                )
+            }
+
             return inputNode;
         }
     }
 }
 
+function InputPhoneTag(props: InputFieldByTypeProps & { fieldIndex: number | undefined }) {
+    const { attribute, fieldIndex, i18n, displayableErrors } = props;
+
+    const { advancedMsgStr, currentLanguage } = i18n;
+
+    const [value, setValue] = React.useState('')
+
+    const handleChange = (newValue: React.SetStateAction<string>) => {
+        setValue(newValue)
+    }
+
+    const languageToCountryMap: Record<string, MuiTelInputCountry> = {
+        "pt-BR": "BR",
+        "en": "US",
+        "es": "MX",
+    };
+
+    const countryCode: MuiTelInputCountry = languageToCountryMap[currentLanguage.languageTag] || "BR";
+
+    return (
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <MuiTelInput
+                error={displayableErrors.find(error => error.fieldIndex === fieldIndex) !== undefined}
+                required={attribute.required}
+                name="phoneNumber" 
+                defaultCountry={countryCode} 
+                margin="normal" 
+                label={advancedMsgStr(attribute.displayName ?? "")} 
+                color="success" 
+                value={value} 
+                onChange={handleChange} />
+        </Box>
+    );
+}
+
+
 function PasswordWrapper(props: {
     kcClsx: KcClsx;
     i18n: I18n;
     passwordInputId: string;
-    children: JSX.Element
+    children: JSX.Element;
 }) {
-    const { kcClsx, children } = props;
+    const { kcClsx, children, passwordInputId } = props;
 
-    // const { msgStr } = i18n;
+    const [password, setPassword] = useState<string>('');
+    const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
 
-    // const { isPasswordRevealed, toggleIsPasswordRevealed } = useIsPasswordRevealed({ passwordInputId });
+    const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newPassword = event.target.value;
+        setPassword(newPassword);
+        validatePassword(newPassword);
+    };
+
+    const validatePassword = (password: string) => {
+        const minLength = password.length >= 8;
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        const hasUppercase = /[A-Z]/.test(password);
+
+        setIsPasswordValid(minLength && hasSpecialChar && hasUppercase);
+    };
 
     return (
         <div className={kcClsx("kcInputGroup")}>
-            {children}
-            {/* <InputAdornment position="end">
-                <IconButton
-                    aria-label={msgStr(isPasswordRevealed ? "hidePassword" : "showPassword")}
-                    onClick={toggleIsPasswordRevealed}
-                    edge="end"
-                >
-                    {isPasswordRevealed ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                </IconButton>
-            </InputAdornment> */}
+            {React.cloneElement(children, {
+                type: 'password',  // Mantém o campo como senha
+                value: password,
+                onChange: handlePasswordChange,
+                id: passwordInputId,
+            })}
+            {!isPasswordValid && password && (
+                <p className="error-message">
+                    a
+                </p>
+            )}
         </div>
     );
 }
@@ -615,6 +674,7 @@ function SelectTag(props: InputFieldByTypeProps) {
 
     return (
         <Select
+            margin="dense"
             id={attribute.name}
             name={attribute.name}
             className={kcClsx("kcInputClass")}
