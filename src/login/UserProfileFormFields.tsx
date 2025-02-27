@@ -12,11 +12,12 @@ import type { UserProfileFormFieldsProps } from "keycloakify/login/UserProfileFo
 import type { Attribute } from "keycloakify/login/KcContext";
 import type { KcContext } from "./KcContext";
 import type { I18n } from "./i18n";
-import { Alert, Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, MenuItem, Radio, RadioGroup, Select, Snackbar, TextField } from "@mui/material";
+import { Alert, Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, MenuItem, Radio, RadioGroup, Select, Snackbar, TextField, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import React from "react";
 import { MuiTelInput } from 'mui-tel-input'
+import { PasswordRequirements } from "./components/ValidatePassword";
 
 export default function UserProfileFormFields(props: UserProfileFormFieldsProps<KcContext, I18n>) {
     const { kcContext, i18n, kcClsx, onIsFormSubmittableValueChange, doMakeUserConfirmPassword, BeforeField, AfterField } = props;
@@ -320,7 +321,9 @@ function PasswordWrapper(props: {
     passwordInputId: string;
     children: JSX.Element;
 }) {
-    const { kcClsx, children, passwordInputId } = props;
+    const { kcClsx, children, passwordInputId, i18n } = props;
+
+    const { msg } = i18n;
 
     const [password, setPassword] = useState<string>('');
     const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
@@ -347,11 +350,10 @@ function PasswordWrapper(props: {
                 onChange: handlePasswordChange,
                 id: passwordInputId,
             })}
-            {!isPasswordValid && password && (
-                <p className="error-message">
-
-                </p>
-            )}
+            <Typography fontSize="14px" >
+                {msg("requireMsg")}
+            </Typography>
+            <PasswordRequirements i18n={i18n} password={password} />
         </div>
     );
 }

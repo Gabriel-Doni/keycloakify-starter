@@ -8,7 +8,7 @@ const { useI18n, ofTypeI18n } = i18nBuilder
         "pt-BR": {
             wellcomeMsg: "Bem vindo à plataforma EVE! 👋",
             formMsg: "Por favor, faça login na sua conta",
-            backLogin: "Voltar para o Login",
+            backLogin: "Ja possui conta fazer Login",
             registerMsg: "Planejar eventos começa aqui 🚀",
             registerFormMsg: "Transforme a maneira como você planeja seus eventos.",
             forgotPassword: "Esqueceu a Senha 🔒",
