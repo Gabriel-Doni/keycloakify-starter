@@ -107,30 +107,32 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
                             method="post"
                         >
                             {!usernameHidden && (
-                                <div className={kcClsx("kcFormGroupClass")}>
-                                    <TextField
-                                        color="success"
-                                        error={messagesPerField.existsError("username", "password")}
-                                        autoFocus
-                                        name="username"
-                                        autoComplete="username"
-                                        sx={{
-                                            width: "100%",
-                                            marginBottom: "16px",
-                                        }}
-                                        className={kcClsx("kcInputClass")}
-                                        required
-                                        id="outlined-basic"
-                                        label={!realm.loginWithEmailAllowed
-                                            ? msg("username")
-                                            : !realm.registrationEmailAsUsername
-                                                ? msg("usernameOrEmail")
-                                                : msg("email")}
-                                        variant="outlined"
-                                    />
-
-
-                                </div>
+                                <TextField
+                                    color="success"
+                                    error={messagesPerField.existsError("username", "password")}
+                                    autoFocus
+                                    name="username"
+                                    autoComplete="username"
+                                    sx={{
+                                        borderRadius: "20px",
+                                        width: "100%",
+                                        marginBottom: "16px",
+                                    }}
+                                    className={kcClsx("kcInputClass")}
+                                    required
+                                    id="outlined-basic"
+                                    label={!realm.loginWithEmailAllowed
+                                        ? msg("username")
+                                        : !realm.registrationEmailAsUsername
+                                            ? msg("usernameOrEmail")
+                                            : msg("email")}
+                                    variant="outlined"
+                                    InputProps={{
+                                        sx: {
+                                            borderRadius: "20px",
+                                        },
+                                    }}
+                                />
                             )}
 
                             <div className={kcClsx("kcFormGroupClass")}>
@@ -141,6 +143,7 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
                                         required
                                         label={msg("password")}
                                         sx={{
+                                            borderRadius: "20px",
                                             width: "100%",
                                             marginBottom: "16px"
                                         }}
@@ -188,9 +191,9 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
                                             control={
                                                 <Checkbox
                                                     sx={{
-                                                        color: "#8DC63F", 
+                                                        color: "#8DC63F",
                                                         '&.Mui-checked': {
-                                                            color: "#8DC63F", 
+                                                            color: "#8DC63F",
                                                         },
                                                     }}
                                                     tabIndex={5}
@@ -230,8 +233,10 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
                                 <input type="hidden" id="id-hidden-input" name="credentialId" value={auth.selectedCredential} />
                                 <Button
                                     sx={{
+                                        borderRadius: "20px",
                                         background: "#8DC63F",
                                         width: "100%",
+                                        marginTop: "16px",
                                         marginBottom: "16px"
                                     }}
                                     tabIndex={7}

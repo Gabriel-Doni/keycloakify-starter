@@ -1,0 +1,4 @@
+Copia o jar para dentro do container local
+    - npm run build-keycloak-theme
+    - docker cp dist_keycloak/keycloak-theme-for-kc-all-other-versions.jar eve-keycloak:/opt/keycloak/providers/
+    - docker restart eve-keycloak 

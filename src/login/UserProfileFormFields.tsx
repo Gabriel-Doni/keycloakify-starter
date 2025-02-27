@@ -16,7 +16,7 @@ import { Alert, Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup,
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import React from "react";
-import { MuiTelInput, MuiTelInputCountry } from 'mui-tel-input'
+import { MuiTelInput } from 'mui-tel-input'
 
 export default function UserProfileFormFields(props: UserProfileFormFieldsProps<KcContext, I18n>) {
     const { kcContext, i18n, kcClsx, onIsFormSubmittableValueChange, doMakeUserConfirmPassword, BeforeField, AfterField } = props;
@@ -255,6 +255,13 @@ function InputFieldByType(props: InputFieldByTypeProps) {
                 );
             }
 
+            if (attribute.name === "phoneNumber") {
+                return (
+                    <InputPhoneTag {...props} />
+                )
+            }
+
+
             const inputNode = <InputTag {...props} fieldIndex={undefined} />;
 
             if (attribute.name === "password" || attribute.name === "password-confirm") {
@@ -265,52 +272,43 @@ function InputFieldByType(props: InputFieldByTypeProps) {
                 );
             }
 
-            const inputPhone = <InputPhoneTag {...props} fieldIndex={undefined} />
-
-            if (attribute.name == "phoneNumber") {
-                return (
-                    <>
-                        {inputPhone}
-                    </>
-                )
-            }
-
             return inputNode;
         }
     }
 }
 
-function InputPhoneTag(props: InputFieldByTypeProps & { fieldIndex: number | undefined }) {
-    const { attribute, fieldIndex, i18n, displayableErrors } = props;
-
-    const { advancedMsgStr, currentLanguage } = i18n;
-
-    const [value, setValue] = React.useState('')
-
-    const handleChange = (newValue: React.SetStateAction<string>) => {
-        setValue(newValue)
-    }
-
-    const languageToCountryMap: Record<string, MuiTelInputCountry> = {
-        "pt-BR": "BR",
-        "en": "US",
-        "es": "MX",
-    };
-
-    const countryCode: MuiTelInputCountry = languageToCountryMap[currentLanguage.languageTag] || "BR";
+function InputPhoneTag(props: InputFieldByTypeProps) {
+    const { attribute, dispatchFormAction } = props;
+    const [value, setValue] = React.useState("");
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        <Box sx={{ borderRadius: "20px", display: "flex", flexDirection: "column", gap: 2 }}>
             <MuiTelInput
-                error={displayableErrors.find(error => error.fieldIndex === fieldIndex) !== undefined}
-                required={attribute.required}
-                name="phoneNumber" 
-                defaultCountry={countryCode} 
-                margin="normal" 
-                label={advancedMsgStr(attribute.displayName ?? "")} 
-                color="success" 
-                value={value} 
-                onChange={handleChange} />
+                sx={{
+                    borderRadius: "20px",
+                    "& .MuiOutlinedInput-root": {
+                        borderRadius: "20px",
+                    },
+                }}
+                required
+                name="phoneNumber"
+                defaultCountry={"BR"}
+                margin="normal"
+                label={"Celular"}
+                color="success"
+                value={value}
+                onChange={(newValue) => {
+                    setValue(newValue);
+
+                    dispatchFormAction({
+                        action: "update",
+                        name: attribute.name,
+                        valueOrValues: newValue,
+                    });
+
+                    document.querySelector("input[name='phoneNumber']")?.dispatchEvent(new Event("input", { bubbles: true }));
+                }}
+            />
         </Box>
     );
 }
@@ -344,14 +342,14 @@ function PasswordWrapper(props: {
     return (
         <div className={kcClsx("kcInputGroup")}>
             {React.cloneElement(children, {
-                type: 'password',  // Mantém o campo como senha
+                type: 'password',
                 value: password,
                 onChange: handlePasswordChange,
                 id: passwordInputId,
             })}
             {!isPasswordValid && password && (
                 <p className="error-message">
-                    a
+
                 </p>
             )}
         </div>
@@ -366,6 +364,11 @@ function InputTag(props: InputFieldByTypeProps & { fieldIndex: number | undefine
     return (
         <>
             <TextField
+                InputProps={{
+                    sx: {
+                        borderRadius: "20px",
+                    },
+                }}
                 margin="normal"
                 color="success"
                 required={attribute.required}

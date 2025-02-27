@@ -8,8 +8,8 @@ import type { UserProfileFormFieldsProps } from "keycloakify/login/UserProfileFo
 import type { PageProps } from "keycloakify/login/pages/PageProps";
 import type { KcContext } from "../KcContext";
 import type { I18n } from "../i18n";
-import { Button } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Box, Button, Typography } from "@mui/material";
+import { BackLoginPage } from "../components/BackLoginPage";
 
 type RegisterProps = PageProps<Extract<KcContext, { pageId: "register.ftl" }>, I18n> & {
     UserProfileFormFields: LazyOrNot<(props: UserProfileFormFieldsProps) => JSX.Element>;
@@ -42,6 +42,14 @@ export default function Register(props: RegisterProps) {
             displayMessage={messagesPerField.exists("global")}
             displayRequiredFields
         >
+            <Box sx={{ textAlign: "start", marginBottom: "24px" }}>
+                <Typography variant="h6" gutterBottom>
+                    {msg("registerMsg")}
+                </Typography>
+                <Typography variant="body1">
+                    {msg("registerFormMsg")}
+                </Typography>
+            </Box>
             <form id="kc-register-form" className={kcClsx("kcFormClass")} action={url.registrationAction} method="post">
                 <UserProfileFormFields
                     kcContext={kcContext}
@@ -50,6 +58,9 @@ export default function Register(props: RegisterProps) {
                     onIsFormSubmittableValueChange={setIsFormSubmittable}
                     doMakeUserConfirmPassword={doMakeUserConfirmPassword}
                 />
+
+                
+
                 {termsAcceptanceRequired && (
                     <TermsAcceptance
                         i18n={i18n}
@@ -90,10 +101,18 @@ export default function Register(props: RegisterProps) {
                         <div id="kc-form-buttons" className={kcClsx("kcFormButtonsClass")}>
                             <Button
                                 sx={{
+                                    borderRadius: "20px",
                                     marginTop: "16px",
-                                    background: "#8DC63F",
+                                    background: !isFormSubmittable || (termsAcceptanceRequired && !areTermsAccepted)
+                                        ? "#aaaaaa" // Cor para o botão desabilitado (cinza ou o tom que você deseja)
+                                        : "#8DC63F", // Cor para o botão habilitado
                                     width: "100%",
-                                    marginBottom: "16px"
+                                    marginBottom: "16px",
+                                    '&:hover': {
+                                        backgroundColor: !isFormSubmittable || (termsAcceptanceRequired && !areTermsAccepted)
+                                            ? "#0A0D12" // Cor para o hover do botão desabilitado
+                                            : "#7DAE29", // Cor do hover quando habilitado
+                                    },
                                 }}
                                 variant="contained"
                                 color="primary"
@@ -107,20 +126,9 @@ export default function Register(props: RegisterProps) {
                         </div>
                     )}
 
-                    <div id="kc-form-options" className={kcClsx("kcFormOptionsClass")} style={{ display: "flex", justifyContent: "flex-start", alignItems: "center" }}>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            startIcon={<ArrowBackIcon />}
-                            href={url.loginUrl}
-                            sx={{
-                                width: "100%",
-                                background: "#8DC63F",
-                            }}
-                        >
-                            {msg("login")}
-                        </Button>
-                    </div>
+                    <Box sx={{ display: "flex", justifyContent: "center", marginTop: "16px" }}>
+                        <BackLoginPage kcContext={kcContext} i18n={i18n} />
+                    </Box>
                 </div>
             </form>
         </Template>

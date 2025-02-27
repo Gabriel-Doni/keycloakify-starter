@@ -5,6 +5,10 @@ import { useI18n } from "./i18n";
 import DefaultPage from "keycloakify/login/DefaultPage";
 import Template from "./Template";
 import "./main.css";
+import LoginResetPassword from "./pages/LoginResetPassword";
+import Terms from "./pages/Terms";
+import LoginVerifyEmail from "./pages/LoginVerifyEmail";
+import LoginUpdatePassword from "./pages/LoginUpdatePassword";
 
 const Login = lazy(() => import("./pages/Login"));
 
@@ -41,6 +45,38 @@ export default function KcPage(props: { kcContext: KcContext }) {
                             doUseDefaultCss={false}
                             UserProfileFormFields={UserProfileFormFields}
                             doMakeUserConfirmPassword={doMakeUserConfirmPassword}
+                        />
+                    );
+
+                    case "login-reset-password.ftl": return (
+                        <LoginResetPassword
+                            {...{ kcContext, i18n, classes }}
+                            Template={Template}
+                            doUseDefaultCss={true}
+                        />
+                    );
+
+                    case "terms.ftl": return (
+                        <Terms
+                            {...{ kcContext, i18n, classes }}
+                            Template={Template}
+                            doUseDefaultCss={true}
+                        />
+                    );
+
+                    case "login-verify-email.ftl": return (
+                        <LoginVerifyEmail
+                            {...{ kcContext, i18n, classes }}
+                            Template={Template}
+                            doUseDefaultCss={true}
+                        />
+                    );
+
+                    case "login-update-password.ftl": return (
+                        <LoginUpdatePassword
+                            {...{ kcContext, i18n, classes }}
+                            Template={Template}
+                            doUseDefaultCss={true}
                         />
                     );
 
