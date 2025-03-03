@@ -1,10 +1,9 @@
-import type { JSX } from "keycloakify/tools/JSX";
 import { useEffect, Fragment, useState } from "react";
 import { assert } from "keycloakify/tools/assert";
 import type { KcClsx } from "keycloakify/login/lib/kcClsx";
 import {
     useUserProfileForm,
-    getButtonToDisplayForMultivaluedAttributeField,
+    // getButtonToDisplayForMultivaluedAttributeField,
     type FormAction,
     type FormFieldError
 } from "keycloakify/login/lib/useUserProfileForm";
@@ -12,12 +11,13 @@ import type { UserProfileFormFieldsProps } from "keycloakify/login/UserProfileFo
 import type { Attribute } from "keycloakify/login/KcContext";
 import type { KcContext } from "./KcContext";
 import type { I18n } from "./i18n";
-import { Alert, Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, MenuItem, Radio, RadioGroup, Select, Snackbar, TextField, Typography } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
+import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, IconButton, InputAdornment, InputLabel, MenuItem, OutlinedInput, Radio, RadioGroup, Select, TextField, Typography } from "@mui/material";
+// import AddIcon from "@mui/icons-material/Add";
+// import RemoveIcon from "@mui/icons-material/Remove";
 import React from "react";
 import { MuiTelInput } from 'mui-tel-input'
 import { PasswordRequirements } from "./components/ValidatePassword";
+import { VisibilityOff, Visibility } from "@mui/icons-material";
 
 export default function UserProfileFormFields(props: UserProfileFormFieldsProps<KcContext, I18n>) {
     const { kcContext, i18n, kcClsx, onIsFormSubmittableValueChange, doMakeUserConfirmPassword, BeforeField, AfterField } = props;
@@ -86,8 +86,9 @@ export default function UserProfileFormFields(props: UserProfileFormFieldsProps<
                                     dispatchFormAction={dispatchFormAction}
                                     kcClsx={kcClsx}
                                     i18n={i18n}
+                                    kcContext={kcContext}
                                 />
-                                <FieldErrors attribute={attribute} displayableErrors={displayableErrors} kcClsx={kcClsx} fieldIndex={undefined} />
+                                {/* <FieldErrors attribute={attribute} displayableErrors={displayableErrors} kcClsx={kcClsx} fieldIndex={undefined} />
                                 {attribute.annotations.inputHelperTextAfter !== undefined && (
                                     <div
                                         className={kcClsx("kcInputHelperTextAfterClass")}
@@ -96,7 +97,7 @@ export default function UserProfileFormFields(props: UserProfileFormFieldsProps<
                                     >
                                         {advancedMsg(attribute.annotations.inputHelperTextAfter)}
                                     </div>
-                                )}
+                                )} */}
 
                                 {AfterField !== undefined && (
                                     <AfterField
@@ -178,51 +179,51 @@ function GroupLabel(props: {
     return null;
 }
 
-function FieldErrors(props: { attribute: Attribute; displayableErrors: FormFieldError[]; fieldIndex: number | undefined; kcClsx: KcClsx }) {
-    const { attribute, fieldIndex, kcClsx } = props;
+// function FieldErrors(props: { attribute: Attribute; displayableErrors: FormFieldError[]; fieldIndex: number | undefined; kcClsx: KcClsx }) {
+//     const { attribute, fieldIndex, kcClsx } = props;
 
-    const displayableErrors = props.displayableErrors.filter(error => error.fieldIndex === fieldIndex);
+//     const displayableErrors = props.displayableErrors.filter(error => error.fieldIndex === fieldIndex);
 
-    const [, setOpenSnackbar] = useState(false);
+//     const [, setOpenSnackbar] = useState(false);
 
 
-    if (displayableErrors.length === 0) {
-        return null;
-    }
+//     if (displayableErrors.length === 0) {
+//         return null;
+//     }
 
-    const handleCloseSnackbar = () => {
-        setOpenSnackbar(false);
-    };
+//     const handleCloseSnackbar = () => {
+//         setOpenSnackbar(false);
+//     };
 
-    return (
-        <span
-            id={`input-error-${attribute.name}${fieldIndex === undefined ? "" : `-${fieldIndex}`}`}
-            className={kcClsx("kcInputErrorMessageClass")}
-            aria-live="polite"
-        >
-            {displayableErrors
-                .filter(error => error.fieldIndex === fieldIndex)
-                .map(({ errorMessage }, i) => (
+//     return (
+//         <span
+//             id={`input-error-${attribute.name}${fieldIndex === undefined ? "" : `-${fieldIndex}`}`}
+//             className={kcClsx("kcInputErrorMessageClass")}
+//             aria-live="polite"
+//         >
+//             {displayableErrors
+//                 .filter(error => error.fieldIndex === fieldIndex)
+//                 .map(({ errorMessage }, i) => (
 
-                    <Snackbar
-                        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                        open={displayableErrors.length > 0}
-                        onClose={handleCloseSnackbar}
-                        key={i}
-                    >
-                        <Alert
-                            onClose={handleCloseSnackbar}
-                            severity="error"
-                        >
-                            {errorMessage}
-                        </Alert>
-                    </Snackbar>
+//                     <Snackbar
+//                         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+//                         open={displayableErrors.length > 0}
+//                         onClose={handleCloseSnackbar}
+//                         key={i}
+//                     >
+//                         <Alert
+//                             onClose={handleCloseSnackbar}
+//                             severity="error"
+//                         >
+//                             {errorMessage}
+//                         </Alert>
+//                     </Snackbar>
 
-                ))
-            }
-        </span >
-    );
-}
+//                 ))
+//             }
+//         </span >
+//     );
+// }
 
 type InputFieldByTypeProps = {
     attribute: Attribute;
@@ -231,10 +232,30 @@ type InputFieldByTypeProps = {
     dispatchFormAction: React.Dispatch<FormAction>;
     i18n: I18n;
     kcClsx: KcClsx;
+    kcContext: KcContext;
 };
 
 function InputFieldByType(props: InputFieldByTypeProps) {
-    const { attribute, valueOrValues } = props;
+    const { attribute, valueOrValues, kcContext, i18n, kcClsx } = props;
+
+    const [showPassword, setShowPassword] = React.useState(false);
+
+    const { messagesPerField } = kcContext;
+
+    const { msg } = i18n;
+
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+    };
+
+    const handleMouseUpPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+    };
+
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
 
     switch (attribute.annotations.inputType) {
         case "textarea":
@@ -265,13 +286,90 @@ function InputFieldByType(props: InputFieldByTypeProps) {
 
             const inputNode = <InputTag {...props} fieldIndex={undefined} />;
 
-            if (attribute.name === "password" || attribute.name === "password-confirm") {
+            if (attribute.name === "password") {
                 return (
-                    <PasswordWrapper kcClsx={props.kcClsx} i18n={props.i18n} passwordInputId={attribute.name}>
-                        {inputNode}
-                    </PasswordWrapper>
+                    <>
+                        <FormControl fullWidth sx={{ marginTop: "16px" }}>
+                            <InputLabel color="success" required error={messagesPerField.existsError("password")} htmlFor="outlined-adornment-password">{msg("password")}</InputLabel>
+                            <OutlinedInput
+                                onChange={(e) => setPassword(e.target.value)}
+                                value={password}
+                                autoFocus
+                                color="success"
+                                required
+                                label={msg("password")}
+                                sx={{
+                                    borderRadius: "20px",
+                                }}
+                                autoComplete="password"
+                                tabIndex={3}
+                                error={messagesPerField.existsError("password")}
+                                id="password"
+                                name="password"
+                                className={kcClsx("kcInputClass")}
+                                type={showPassword ? 'text' : 'password'}
+                                endAdornment={<InputAdornment position="end">
+                                    <IconButton
+                                        aria-label={showPassword ? 'hide the password' : 'display the password'}
+                                        onClick={handleClickShowPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                        onMouseUp={handleMouseUpPassword}
+                                        edge="end"
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>} />
+                        </FormControl>
+                        <PasswordRequirements i18n={i18n} password={password} />
+                    </>
                 );
             }
+
+            if (attribute.name === "password-confirm") {
+                return (
+                    <>
+                        <FormControl fullWidth sx={{ marginTop: "16px" }}>
+                            <InputLabel color="success" required error={password !== confirmPassword} htmlFor="outlined-adornment-password">{msg("passwordConfirm")}</InputLabel>
+                            <OutlinedInput
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                value={confirmPassword}
+                                color="success"
+                                required
+                                label={msg("passwordConfirm")}
+                                sx={{
+                                    borderRadius: "20px",
+                                }}
+                                autoComplete="passwordConfirm"
+                                tabIndex={3}
+                                error={password !== confirmPassword}
+                                id="password-confirm"
+                                name="password-confirm"
+                                className={kcClsx("kcInputClass")}
+                                type={showPassword ? 'text' : 'password'}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label={showPassword ? 'hide the password' : 'display the password'}
+                                            onClick={handleClickShowPassword}
+                                            onMouseDown={handleMouseDownPassword}
+                                            onMouseUp={handleMouseUpPassword}
+                                            edge="end"
+                                        >
+                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                            />
+                        </FormControl>
+                        {confirmPassword != "" && password !== confirmPassword && (
+                            <Typography mt={1} fontSize="14px" color="red">
+                                {msg("equalPasswords")}
+                            </Typography>
+                        )}
+                    </>
+                );
+            }
+
 
             return inputNode;
         }
@@ -314,54 +412,12 @@ function InputPhoneTag(props: InputFieldByTypeProps) {
     );
 }
 
-
-function PasswordWrapper(props: {
-    kcClsx: KcClsx;
-    i18n: I18n;
-    passwordInputId: string;
-    children: JSX.Element;
-}) {
-    const { kcClsx, children, passwordInputId, i18n } = props;
-
-    const { msg } = i18n;
-
-    const [password, setPassword] = useState<string>('');
-    const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
-
-    const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newPassword = event.target.value;
-        setPassword(newPassword);
-        validatePassword(newPassword);
-    };
-
-    const validatePassword = (password: string) => {
-        const minLength = password.length >= 8;
-        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-        const hasUppercase = /[A-Z]/.test(password);
-
-        setIsPasswordValid(minLength && hasSpecialChar && hasUppercase);
-    };
-
-    return (
-        <div className={kcClsx("kcInputGroup")}>
-            {React.cloneElement(children, {
-                type: 'password',
-                value: password,
-                onChange: handlePasswordChange,
-                id: passwordInputId,
-            })}
-            <Typography fontSize="14px" >
-                {msg("requireMsg")}
-            </Typography>
-            <PasswordRequirements i18n={i18n} password={password} />
-        </div>
-    );
-}
-
 function InputTag(props: InputFieldByTypeProps & { fieldIndex: number | undefined }) {
     const { attribute, fieldIndex, kcClsx, dispatchFormAction, valueOrValues, i18n, displayableErrors } = props;
 
     const { advancedMsgStr } = i18n;
+
+    console.log(attribute);
 
     return (
         <>
@@ -450,18 +506,18 @@ function InputTag(props: InputFieldByTypeProps & { fieldIndex: number | undefine
 
                 assert(valueOrValues instanceof Array);
 
-                const values = valueOrValues;
+                // const values = valueOrValues;
 
                 return (
                     <>
-                        <FieldErrors attribute={attribute} kcClsx={kcClsx} displayableErrors={displayableErrors} fieldIndex={fieldIndex} />
+                        {/* <FieldErrors attribute={attribute} kcClsx={kcClsx} displayableErrors={displayableErrors} fieldIndex={fieldIndex} />
                         <AddRemoveButtonsMultiValuedAttribute
                             attribute={attribute}
                             values={values}
                             fieldIndex={fieldIndex}
                             dispatchFormAction={dispatchFormAction}
                             i18n={i18n}
-                        />
+                        /> */}
                     </>
                 );
             })()}
@@ -469,63 +525,63 @@ function InputTag(props: InputFieldByTypeProps & { fieldIndex: number | undefine
     );
 }
 
-function AddRemoveButtonsMultiValuedAttribute(props: {
-    attribute: Attribute;
-    values: string[];
-    fieldIndex: number;
-    dispatchFormAction: React.Dispatch<Extract<FormAction, { action: "update" }>>;
-    i18n: I18n;
-}) {
-    const { attribute, values, fieldIndex, dispatchFormAction, i18n } = props;
+// function AddRemoveButtonsMultiValuedAttribute(props: {
+//     attribute: Attribute;
+//     values: string[];
+//     fieldIndex: number;
+//     dispatchFormAction: React.Dispatch<Extract<FormAction, { action: "update" }>>;
+//     i18n: I18n;
+// }) {
+//     const { attribute, values, fieldIndex, dispatchFormAction, i18n } = props;
 
-    const { msg } = i18n;
+//     const { msg } = i18n;
 
-    const { hasAdd, hasRemove } = getButtonToDisplayForMultivaluedAttributeField({ attribute, values, fieldIndex });
+//     const { hasAdd, hasRemove } = getButtonToDisplayForMultivaluedAttributeField({ attribute, values, fieldIndex });
 
-    const idPostfix = `-${attribute.name}-${fieldIndex + 1}`;
+//     const idPostfix = `-${attribute.name}-${fieldIndex + 1}`;
 
-    return (
-        <>
-            {hasRemove && (
-                <Button
-                    id={`kc-remove${idPostfix}`}
-                    type="button"
-                    variant="outlined"
-                    color="secondary"
-                    startIcon={<RemoveIcon />}
-                    onClick={() =>
-                        dispatchFormAction({
-                            action: "update",
-                            name: attribute.name,
-                            valueOrValues: values.filter((_, i) => i !== fieldIndex)
-                        })
-                    }
-                    sx={{ marginRight: 1 }}
-                >
-                    {msg("remove")}
-                </Button>
-            )}
-            {hasAdd && (
-                <Button
-                    id={`kc-add${idPostfix}`}
-                    type="button"
-                    variant="contained"
-                    color="primary"
-                    startIcon={<AddIcon />}
-                    onClick={() =>
-                        dispatchFormAction({
-                            action: "update",
-                            name: attribute.name,
-                            valueOrValues: [...values, ""]
-                        })
-                    }
-                >
-                    {msg("addValue")}
-                </Button>
-            )}
-        </>
-    );
-}
+//     return (
+//         <>
+//             {hasRemove && (
+//                 <Button
+//                     id={`kc-remove${idPostfix}`}
+//                     type="button"
+//                     variant="outlined"
+//                     color="secondary"
+//                     startIcon={<RemoveIcon />}
+//                     onClick={() =>
+//                         dispatchFormAction({
+//                             action: "update",
+//                             name: attribute.name,
+//                             valueOrValues: values.filter((_, i) => i !== fieldIndex)
+//                         })
+//                     }
+//                     sx={{ marginRight: 1 }}
+//                 >
+//                     {msg("remove")}
+//                 </Button>
+//             )}
+//             {hasAdd && (
+//                 <Button
+//                     id={`kc-add${idPostfix}`}
+//                     type="button"
+//                     variant="contained"
+//                     color="primary"
+//                     startIcon={<AddIcon />}
+//                     onClick={() =>
+//                         dispatchFormAction({
+//                             action: "update",
+//                             name: attribute.name,
+//                             valueOrValues: [...values, ""]
+//                         })
+//                     }
+//                 >
+//                     {msg("addValue")}
+//                 </Button>
+//             )}
+//         </>
+//     );
+// }
 
 function InputTagSelects(props: InputFieldByTypeProps) {
     const { attribute, dispatchFormAction, i18n, valueOrValues } = props;
