@@ -38,6 +38,7 @@ export default function LoginResetPassword(props: PageProps<Extract<KcContext, {
             <form id="kc-reset-password-form" className={kcClsx("kcFormClass")} action={url.loginAction} method="post">
                 <div className={kcClsx("kcFormGroupClass")}>
                     <TextField
+                        size="small"
                         color="success"
                         error={messagesPerField.existsError("username")}
                         autoFocus
@@ -85,7 +86,7 @@ export default function LoginResetPassword(props: PageProps<Extract<KcContext, {
             </form>
 
             <Box sx={{ display: "flex", justifyContent: "center", marginTop: "16px" }}>
-                <BackLoginPage kcContext={kcContext} i18n={i18n} />  
+                <BackLoginPage kcContext={kcContext} i18n={i18n} />
             </Box>
         </Template>
     );

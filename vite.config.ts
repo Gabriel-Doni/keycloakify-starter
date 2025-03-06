@@ -11,16 +11,16 @@ export default defineConfig({
             themeName: "custom-eve",
             extraThemeProperties: ["public"],
             accountThemeImplementation: "none",
-            postBuild: async (buildContext) => {
-                await buildEmailTheme({
-                    templatesSrcDirPath: import.meta.dirname + "/emails/templates",
-                    themeNames: buildContext.themeNames,
-                    keycloakifyBuildDirPath: buildContext.keycloakifyBuildDirPath,
-                    locales: ["en", "pt-BR"],
-                    cwd: import.meta.dirname,
-                    i18nSourceFile: import.meta.dirname + "/emails/i18n.ts",
-                });
-            },
+            // postBuild: async (buildContext) => {
+            //     await buildEmailTheme({
+            //         templatesSrcDirPath: import.meta.dirname + "/emails/templates",
+            //         themeNames: buildContext.themeNames,
+            //         keycloakifyBuildDirPath: buildContext.keycloakifyBuildDirPath,
+            //         locales: ["en", "pt-BR"],
+            //         cwd: import.meta.dirname,
+            //         i18nSourceFile: import.meta.dirname + "/emails/i18n.ts",
+            //     });
+            // },
         }),
     ],
 });

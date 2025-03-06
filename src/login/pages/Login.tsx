@@ -108,6 +108,7 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
                         >
                             {!usernameHidden && (
                                 <TextField
+                                    size="small"
                                     color="success"
                                     error={messagesPerField.existsError("username", "password")}
                                     autoFocus
@@ -137,8 +138,9 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
 
                             <div className={kcClsx("kcFormGroupClass")}>
                                 <FormControl sx={{ width: '100%' }} variant="outlined">
-                                    <InputLabel color="success" required error={messagesPerField.existsError("username", "password")} htmlFor="outlined-adornment-password">{msg("password")}</InputLabel>
+                                    <InputLabel size="small" color="success" required error={messagesPerField.existsError("username", "password")} htmlFor="outlined-adornment-password">{msg("password")}</InputLabel>
                                     <OutlinedInput
+                                        size="small"
                                         color="success"
                                         required
                                         label={msg("password")}

@@ -14,10 +14,8 @@ export default function Terms(props: PageProps<Extract<KcContext, { pageId: "ter
     const { msg, msgStr } = i18n;
     const { url } = kcContext;
 
-    // Estado para controlar se o checkbox foi marcado
     const [isChecked, setIsChecked] = useState(false);
 
-    // Função para lidar com a alteração do checkbox
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsChecked(event.target.checked);
     };

@@ -85,6 +85,7 @@ export default function LoginUpdatePassword(props: PageProps<Extract<KcContext, 
                 <FormControl fullWidth sx={{ marginBottom: 2 }}>
                     <InputLabel color="success" required error={messagesPerField.existsError("password", "password-confirm")} htmlFor="outlined-adornment-password">{msg("passwordNew")}</InputLabel>
                     <OutlinedInput
+                        size="small"
                         onChange={(e) => setPassword(e.target.value)}
                         value={password}
                         autoFocus
@@ -126,6 +127,7 @@ export default function LoginUpdatePassword(props: PageProps<Extract<KcContext, 
                 <FormControl fullWidth sx={{ marginBottom: 2 }}>
                     <InputLabel color="success" required error={messagesPerField.existsError("password", "password-confirm")} htmlFor="outlined-adornment-password">{msg("passwordConfirm")}</InputLabel>
                     <OutlinedInput
+                        size="small"
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         value={confirmPassword}
                         color="success"

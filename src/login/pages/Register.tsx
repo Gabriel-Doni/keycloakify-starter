@@ -32,6 +32,12 @@ export default function Register(props: RegisterProps) {
     const [isFormSubmittable, setIsFormSubmittable] = useState(false);
     const [areTermsAccepted, setAreTermsAccepted] = useState(false);
 
+    // const [isChecked, setIsChecked] = useState(false);
+
+    // const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     setIsChecked(event.target.checked);
+    // };
+
     return (
         <Template
             kcContext={kcContext}
@@ -59,8 +65,6 @@ export default function Register(props: RegisterProps) {
                     doMakeUserConfirmPassword={doMakeUserConfirmPassword}
                 />
 
-                
-
                 {termsAcceptanceRequired && (
                     <TermsAcceptance
                         i18n={i18n}
@@ -79,6 +83,16 @@ export default function Register(props: RegisterProps) {
                 )}
                 <div className={kcClsx("kcFormGroupClass")}>
 
+                    {/* <FormControlLabel
+                        control={<Checkbox sx={{
+                            color: "#8DC63F",
+                            '&.Mui-checked': {
+                                color: "#8DC63F",
+                            },
+                        }} checked={isChecked} onChange={handleCheckboxChange} color="primary" />}
+                        label={msg("acceptTerms")}
+                        
+                    /> */}
 
                     {recaptchaRequired && !recaptchaVisible && recaptchaAction !== undefined ? (
                         <div id="kc-form-buttons" className={kcClsx("kcFormButtonsClass")}>
@@ -104,14 +118,14 @@ export default function Register(props: RegisterProps) {
                                     borderRadius: "20px",
                                     marginTop: "16px",
                                     background: !isFormSubmittable || (termsAcceptanceRequired && !areTermsAccepted)
-                                        ? "#aaaaaa" // Cor para o botão desabilitado (cinza ou o tom que você deseja)
-                                        : "#8DC63F", // Cor para o botão habilitado
+                                        ? "#aaaaaa"
+                                        : "#8DC63F",
                                     width: "100%",
                                     marginBottom: "16px",
                                     '&:hover': {
                                         backgroundColor: !isFormSubmittable || (termsAcceptanceRequired && !areTermsAccepted)
-                                            ? "#0A0D12" // Cor para o hover do botão desabilitado
-                                            : "#7DAE29", // Cor do hover quando habilitado
+                                            ? "#0A0D12"
+                                            : "#7DAE29",
                                     },
                                 }}
                                 variant="contained"

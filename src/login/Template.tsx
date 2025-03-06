@@ -32,7 +32,7 @@ export default function Template(props: TemplateProps<KcContext, I18n>) {
                 {isMobile && (
                     <Box
                         component="img"
-                        src={`${import.meta.env.BASE_URL}img/EVE_LOGOS@2x.svg`}
+                        src={`${import.meta.env.BASE_URL}img/eve-expert.png`}
                         alt="Logo"
                         sx={{
                             width: 300 ,
